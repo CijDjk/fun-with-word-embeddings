@@ -1,6 +1,6 @@
 
 ## Fun with Word Embeddings
-*Christopher Δ 05//2025*
+*Christopher Δ 05/2025*
 1. load a word2vec embedding model
 2. apply the model to a relatively short list of common English words
 3. begin at a specified word and engage in a 'random walk' limited to unvisited, similar words
@@ -15,7 +15,6 @@
 
 
 # In[1]:
-
 
 import numpy as np
 import pandas as pd
@@ -41,9 +40,7 @@ except:
     model.save_word2vec_format(SUBSET_FILEN)
 
 
-
 # In[2]:
-
 
 def random_talk(token, N=5, limit=128, model=model, words_in_common=words_in_common):
     """
@@ -80,35 +77,23 @@ def convert_to_pca_model(w2v_model, n_components=2):
     return pca
 
 
-
 # In[3]:
-
 
 words = [w for w in random_talk("pianoforte", 3, 512)]
 
 
-
 # In[4]:
-
 
 pca = convert_to_pca_model(model, n_components=4)
 pca_dict = {key: pca.transform(model[key].reshape(1,-1)).reshape(-1) for key in model.index_to_key} # 😎
 component_list = [[key] + list(pca_dict[key]) for key in words]
 df = pd.DataFrame(component_list, columns = ["token", "pc1", "pc2", "pc3", "pc4"])
-positron = -1.01 * min(df.pc3)
+positron = -1.07 * min(df.pc3)
 df.pc3 = pd.Series([int(x) for x in (df.pc3 + positron)**1.7 * 100])
-
-
-
-# In[5]:
-
-
-print(df)
-
+#print(df)
 
 
 # In[6]:
-
 
 ext = 0.25
 range_x = [min(df.pc1) - ext, max(df.pc1) + ext]
